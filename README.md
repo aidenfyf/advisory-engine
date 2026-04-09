@@ -64,7 +64,7 @@ Your Airtable base needs two tables:
 In `vercel.json`, replace `YOUR-DOMAIN` with your actual Vercel domain:
 
 ```json
-"Access-Control-Allow-Origin": "https://advisory-engine.vercel.app"
+"Access-Control-Allow-Origin": "https://yourdomain.vercel.app"
 ```
 
 If you add a custom domain later, update this to match.
