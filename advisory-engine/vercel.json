@@ -6,7 +6,7 @@
     {
       "source": "/api/(.*)",
       "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "https://advisory-engine.vercel.app" },
+        { "key": "Access-Control-Allow-Origin", "value": "advisory-engine-i1qta2zo0-8inmedia.vercel.app" },
         { "key": "Access-Control-Allow-Methods", "value": "POST, OPTIONS" },
         { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
       ]
