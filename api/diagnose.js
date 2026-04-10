@@ -134,7 +134,7 @@ export default async function handler(req, res) {
                     Question: question.trim().substring(0, 10000),
                     Diagnosis: responseText.substring(0, 10000),
                     "Question Number": newCount,
-                    "Created At": new Date().toISOString(),
+                    "Created At": new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
                   },
                 },
               ],
