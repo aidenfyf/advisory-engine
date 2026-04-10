@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { email } = req.body;
+  const { email, name } = req.body;
 
   if (!email || typeof email !== "string" || !email.includes("@")) {
     return res.status(400).json({ error: "Valid email required." });
@@ -19,6 +19,18 @@ export default async function handler(req, res) {
   }
 
   try {
+    const now = new Date();
+    const dateTime = now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" });
+
+    const fields = {
+      "email address": email.trim().toLowerCase(),
+      "Date": dateTime,
+    };
+
+    if (name && typeof name === "string" && name.trim().length > 0) {
+      fields["Name"] = name.trim();
+    }
+
     const response = await fetch(
       `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Newsletter`,
       {
@@ -28,13 +40,7 @@ export default async function handler(req, res) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          records: [
-            {
-              fields: {
-                "email address": email.trim().toLowerCase(),
-              },
-            },
-          ],
+          records: [{ fields }],
         }),
       }
     );
