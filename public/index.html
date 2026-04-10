@@ -92,6 +92,8 @@
   .loading-dots::after{content:'';animation:dots 1.5s steps(4) infinite}
   @keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
   .limit-message{font-family:var(--mono);font-size:13px;color:var(--accent);line-height:1.7;padding:20px 0 4px;text-align:center}
+  .new-diagnosis-btn{font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);border:1px solid var(--border-light);padding:9px 20px;border-radius:8px;background:transparent;cursor:pointer;transition:all 0.3s;margin-top:20px;display:inline-flex;align-items:center;gap:8px}
+  .new-diagnosis-btn:hover{border-color:var(--accent);color:var(--accent)}
 
   /* DIVIDER */
   .section-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--border-light) 30%,var(--border-light) 70%,transparent);margin:80px 0 0}
@@ -383,6 +385,14 @@
       // Render markdown-ish response
       diagnosisText.innerHTML = renderDiagnosis(data.diagnosis);
 
+      // Add "New diagnosis" button if questions remain
+      if (questionCount < MAX_QUESTIONS) {
+        diagnosisText.innerHTML += '<div style="text-align:center"><button class="new-diagnosis-btn" onclick="resetTerminal()">New diagnosis ↗</button></div>';
+      }
+
+      // Hide run button while showing answer, show after reset
+      btn.style.display = 'none';
+
       // Restore status
       status.innerHTML = '';
       status.textContent = 'diagnosis complete';
@@ -411,11 +421,33 @@
     input.disabled = true;
     input.placeholder = '';
     input.value = '';
-    btn.disabled = true;
+    btn.style.display = 'none';
 
     container.innerHTML = '<div class="limit-message">You\'ve got 3 plays on the board.<br>Stop asking — start executing.<br>Come back when you\'ve moved the needle.</div>';
 
+    const output = document.getElementById('terminal-output');
+    output.classList.remove('visible');
+
     updateCounter();
+  }
+
+  function resetTerminal() {
+    const input = document.getElementById('question-input');
+    const btn = document.getElementById('run-btn');
+    const output = document.getElementById('terminal-output');
+    const diagnosisText = document.getElementById('diagnosis-text');
+    const status = document.getElementById('terminal-status');
+
+    input.value = '';
+    input.style.height = 'auto';
+    diagnosisText.innerHTML = '';
+    output.classList.remove('visible');
+    btn.style.display = 'flex';
+    status.textContent = 'system online';
+    status.style.color = 'var(--accent)';
+    input.focus();
+
+    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   function renderDiagnosis(text) {
