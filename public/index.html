@@ -62,14 +62,14 @@
   /* TERMINAL */
   .terminal-section{padding:0 24px 0;position:relative;z-index:1;margin-top:32px}
   .terminal{max-width:620px;margin:0 auto;border-radius:14px;border:1px solid var(--border-light);overflow:hidden;background:var(--surface);box-shadow:0 30px 80px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.03)}
-  .terminal-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.015)}
+  .terminal-bar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.015);gap:12px}
   .terminal-dots{display:flex;gap:7px}
   .terminal-dots span{width:11px;height:11px;border-radius:50%}
   .terminal-dots span:nth-child(1){background:#ff5f57}
   .terminal-dots span:nth-child(2){background:#febc2e}
   .terminal-dots span:nth-child(3){background:#28c840}
   .terminal-title{font-family:var(--mono);font-size:12px;color:var(--text-dim);letter-spacing:0.02em}
-  .terminal-status{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:0.04em}
+  .terminal-status{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:0.04em;margin-left:auto}
   .terminal-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
   .terminal-body{padding:24px 24px 20px;min-height:120px;position:relative}
   .terminal-input-row{display:flex;align-items:flex-start;gap:10px}
@@ -91,6 +91,8 @@
   .run-btn svg{width:14px;height:14px}
   .loading-dots::after{content:'';animation:dots 1.5s steps(4) infinite}
   @keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
+  .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--bg);border-top-color:transparent;border-radius:50%;animation:spin 0.7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}}
   .limit-message{font-family:var(--mono);font-size:13px;color:var(--accent);line-height:1.7;padding:20px 0 4px;text-align:center}
   .new-diagnosis-btn{font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);border:1px solid var(--border-light);padding:9px 20px;border-radius:8px;background:transparent;cursor:pointer;transition:all 0.3s;margin-top:20px;display:inline-flex;align-items:center;gap:8px}
   .new-diagnosis-btn:hover{border-color:var(--accent);color:var(--accent)}
@@ -191,7 +193,7 @@
   <p class="hero-sub fade-up delay-2">Describe where you're stuck: offers, outreach, GTM plan, or systems. Get a structured, revenue-focused diagnosis in seconds.</p>
   <div class="stats fade-up delay-3">
     <div class="stat">
-      <div class="stat-value">&lt; 30s</div>
+      <div class="stat-value">&lt; 13s</div>
       <div class="stat-label">Response</div>
     </div>
     <div class="stat">
@@ -210,7 +212,7 @@
   <div class="terminal" id="terminal">
     <div class="terminal-bar">
       <div class="terminal-dots"><span></span><span></span><span></span></div>
-      <span class="terminal-title">advisory_engine.ai — input</span>
+      <span class="terminal-title">ai_input</span>
       <span class="terminal-status" id="terminal-status">system online</span>
     </div>
     <div class="terminal-body">
@@ -277,6 +279,7 @@
   <p class="newsletter-heading fade-up">Stay in the loop</p>
   <p class="newsletter-sub fade-up delay-1">Quick growth tips and GTM plays. Sent weekly.</p>
   <div class="newsletter-form fade-up delay-2">
+    <input type="text" class="newsletter-input" id="newsletter-name" placeholder="First name" style="flex:0.6">
     <input type="email" class="newsletter-input" id="newsletter-email" placeholder="you@company.com">
     <button class="newsletter-btn" id="newsletter-btn" onclick="subscribe()">Subscribe</button>
   </div>
@@ -346,7 +349,7 @@
 
     // Loading state
     btn.disabled = true;
-    btn.innerHTML = 'Diagnosing<span class="loading-dots"></span>';
+    btn.innerHTML = '<span class="spinner"></span>';
     status.innerHTML = '';
     status.textContent = 'processing...';
     status.style.color = 'var(--text-dim)';
@@ -459,10 +462,12 @@
 
   // --- NEWSLETTER ---
   async function subscribe() {
+    const nameInput = document.getElementById('newsletter-name');
     const emailInput = document.getElementById('newsletter-email');
     const btn = document.getElementById('newsletter-btn');
     const msg = document.getElementById('newsletter-msg');
     const email = emailInput.value.trim();
+    const name = nameInput.value.trim();
 
     if (!email || !email.includes('@')) {
       msg.textContent = 'Please enter a valid email.';
@@ -471,19 +476,20 @@
     }
 
     btn.disabled = true;
-    btn.textContent = '...';
+    btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;border-color:var(--bg);border-top-color:transparent"></span>';
 
     try {
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email, name })
       });
 
       if (res.ok) {
         msg.textContent = "You're in. Watch your inbox.";
         msg.className = 'newsletter-msg visible';
         emailInput.value = '';
+        nameInput.value = '';
       } else {
         throw new Error('Failed');
       }
