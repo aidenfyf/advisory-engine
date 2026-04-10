@@ -2,6 +2,14 @@
 
 AI-powered business diagnosis tool. Vercel-deployable.
 
+## Features
+
+- **Server-side rate limiting**: 3 diagnoses per IP per 24 hours via Vercel KV (Redis). Cannot be bypassed by clearing browser data.
+- **Hormozi-style AI advisor**: Tactical, number-driven business diagnoses. Bottleneck → Revenue Impact → 3-Step Fix.
+- **Airtable logging**: Every diagnosis + newsletter signup logged automatically.
+- **CORS locked**: API only accepts requests from your domain.
+- **Responsive**: Desktop, tablet, mobile.
+
 ## Project Structure
 
 ```
@@ -81,11 +89,3 @@ Get yours at https://console.anthropic.com → API Keys
 cd advisory-engine
 vercel --prod
 ```
-
-## Features
-
-- **Server-side rate limiting**: 3 diagnoses per IP per 24 hours via Vercel KV (Redis). Cannot be bypassed by clearing browser data.
-- **Hormozi-style AI advisor**: Tactical, number-driven business diagnoses. Bottleneck → Revenue Impact → 3-Step Fix.
-- **Airtable logging**: Every diagnosis + newsletter signup logged automatically.
-- **CORS locked**: API only accepts requests from your domain.
-- **Responsive**: Desktop, tablet, mobile.
