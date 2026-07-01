@@ -40,6 +40,8 @@ async function diagnose(question) {
 // GitHub-flavored markdown -> Slack mrkdwn (Slack uses single-asterisk bold, no headings)
 function toSlackMrkdwn(md) {
   return md
+    .replace(/\s*—\s*/g, " - ") // em-dash -> spaced hyphen (no-em-dash preference)
+    .replace(/–/g, "-") // en-dash (ranges) -> hyphen
     .replace(/^#{1,6}\s*(.+)$/gm, "*$1*")
     .replace(/\*\*(.+?)\*\*/g, "*$1*");
 }
