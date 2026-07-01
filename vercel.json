@@ -11,5 +11,8 @@
         { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
       ]
     }
+  ],
+  "crons": [
+    { "path": "/api/heartbeat", "schedule": "0 14 1,15 * *" }
   ]
 }
